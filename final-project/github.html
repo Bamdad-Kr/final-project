@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Users</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(190, 130, 130, 0.05);
+            margin-top: 15px;
+        }
+
+        .user-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .user-info {
+            flex-grow: 1;
+        }
+
+        .user-info h3 {
+            margin: 0 0 5px 0;
+            color: #007bff;
+        }
+
+        .user-info a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .user-info a:hover {
+            text-decoration: underline;
+        }
+
+        .user-actions button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <span class="github-search-logo">GitHub Search</span>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="github.html">GitHub Users</a></li>
+                    <li><a href="weather.html">Weather</a></li>
+                    <li><a href="time.html">Time</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="github-search-form">
+        <input type="text" id="github-username-input" placeholder="Search Users...">
+        <button id="search-github-btn">Submit</button>
+    </div>
+
+    <main class="container">
+        <div id="github-users-results">
+            </div>
+        <div id="no-results-message" style="display: none; color: red; text-align: center; margin-top: 20px;">
+            No users found with this name.
+        </div>
+        <div id="error-fetching-message" style="display: none; color: red; text-align: center; margin-top: 20px;">
+            Error fetching data. Please try again.
+        </div>
+    </main>
+
+    <script src="js/github.js"></script>
+</body>
+</html>
