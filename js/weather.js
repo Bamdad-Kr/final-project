@@ -3,9 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('search-weather-btn');
     const weatherResultsDiv = document.getElementById('weather-results');
     const errorMessageDiv = document.getElementById('weather-error-message');
-    
-    // Using OpenWeatherMap API which is more reliable for browser usage
-    const API_KEY = '5f472b7acba333cd8a035ea85a0d6d4c'; // OpenWeatherMap API key
 
     searchButton.addEventListener('click', fetchWeatherData);
     cityInput.addEventListener('keypress', (e) => {
@@ -31,55 +28,51 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessageDiv.style.display = 'none';
 
         try {
-            // Use OpenWeatherMap API which is more reliable for browser usage
-            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`);
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('City not found. Please check the spelling and try again.');
-                } else {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-            }
+            // Mock weather data for demonstration
+            const mockWeatherData = {
+                name: city,
+                country: 'IR',
+                coord: { lat: 35.6892, lon: 51.3890 },
+                weather: [{ description: 'Partly cloudy', icon: '02d' }],
+                main: {
+                    temp: Math.floor(Math.random() * 30) + 10,
+                    feels_like: Math.floor(Math.random() * 30) + 10,
+                    humidity: Math.floor(Math.random() * 50) + 30,
+                    pressure: Math.floor(Math.random() * 200) + 1000
+                },
+                wind: {
+                    speed: Math.floor(Math.random() * 20) + 5
+                },
+                visibility: Math.floor(Math.random() * 10) + 5
+            };
 
-            const data = await response.json();
-
-            if (data.cod && data.cod !== 200) {
-                errorMessageDiv.textContent = `Error: ${data.message || 'Unable to fetch weather data for this city.'}`;
-                errorMessageDiv.style.display = 'block';
-                return;
-            }
-
-            const weatherIcon = data.weather && data.weather.length > 0 ? 
-                `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png` : '';
+            const weatherIcon = `https://openweathermap.org/img/wn/${mockWeatherData.weather[0].icon}@2x.png`;
 
             weatherResultsDiv.innerHTML = `
                 <div class="weather-card">
-                    <h2>${data.name}, ${data.sys.country}</h2>
-                    <p>Latitude: ${data.coord.lat}</p>
-                    <p>Longitude: ${data.coord.lon}</p>
-                    ${weatherIcon ? `<img src="${weatherIcon}" alt="Weather Icon" class="weather-icon">` : ''}
-                    <p>${data.weather && data.weather.length > 0 ? data.weather[0].description : 'No description'}</p>
-                    <p class="temperature">${Math.round(data.main.temp)}°C</p>
-                    <p>Feels like: ${Math.round(data.main.feels_like)}°C</p>
-                    <p>Humidity: ${data.main.humidity}%</p>
-                    <p>Wind: ${Math.round(data.wind.speed * 3.6)} km/h</p>
-                    <p>Pressure: ${data.main.pressure} hPa</p>
-                    <p>Visibility: ${data.visibility / 1000} km</p>
+                    <h2>${mockWeatherData.name}, ${mockWeatherData.country}</h2>
+                    <p>Latitude: ${mockWeatherData.coord.lat}</p>
+                    <p>Longitude: ${mockWeatherData.coord.lon}</p>
+                    <img src="${weatherIcon}" alt="Weather Icon" class="weather-icon">
+                    <p>${mockWeatherData.weather[0].description}</p>
+                    <p class="temperature">${mockWeatherData.main.temp}°C</p>
+                    <p>Feels like: ${mockWeatherData.main.feels_like}°C</p>
+                    <p>Humidity: ${mockWeatherData.main.humidity}%</p>
+                    <p>Wind: ${Math.round(mockWeatherData.wind.speed * 3.6)} km/h</p>
+                    <p>Pressure: ${mockWeatherData.main.pressure} hPa</p>
+                    <p>Visibility: ${mockWeatherData.visibility} km</p>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 20px;">
+                        <i>Note: This is demo data. For real weather data, please configure a valid API key.</i>
+                    </p>
                 </div>
             `;
 
         } catch (error) {
             console.error('Error fetching weather data:', error);
-            
-            // More specific error messages based on the error type
-            if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-                errorMessageDiv.textContent = 'Network error. Please check your internet connection and try again.';
-            } else if (error.message.includes('CORS')) {
-                errorMessageDiv.textContent = 'CORS error. The weather service is not accessible from this location.';
-            } else {
-                errorMessageDiv.textContent = error.message || 'Error fetching weather data. Please try again later.';
-            }
+            errorMessageDiv.textContent = 'Error fetching weather data. Please try again later.';
             errorMessageDiv.style.display = 'block';
         } finally {
             // Reset button state
