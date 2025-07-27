@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub User Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .user-details-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .user-details-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 3px solid #007bff;
+        }
+
+        .user-details-card h2 {
+            margin: 10px 0 5px 0;
+            color: #333;
+        }
+
+        .user-details-card p {
+            margin: 5px 0;
+            color: #555;
+            text-align: center;
+        }
+
+        .user-details-card .stats span {
+            display: inline-block;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .repos-section h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .repo-item {
+            background-color: #e9f5ff;
+            border: 1px solid #cce5ff;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .repo-item a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .repo-item a:hover {
+            text-decoration: underline;
+        }
+
+        .repo-item span {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <span class="github-search-logo">GitHub Search</span>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="github.html">GitHub Users</a></li>
+                    <li><a href="weather.html">Weather</a></li>
+                    <li><a href="time.html">Time</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="user-details">
+            </div>
+
+        <div id="user-repos">
+            <h2>Latest Repositories</h2>
+            <div id="repos-list">
+                </div>
+            <p id="no-repos-message" style="display: none; color: gray; text-align: center;">
+                This user has no public repositories or data is unavailable.
+            </p>
+        </div>
+        <div id="loading-message" class="text-center" style="display: none;">
+            Loading user information...
+        </div>
+        <div id="error-message" class="text-center" style="display: none; color: red;">
+            Error fetching user information.
+        </div>
+        <div id="no-user-data-message" class="text-center" style="display: none; color: orange;">
+            Insufficient data found for this user. Please try another user.
+            <button onclick="window.location.href='github.html'" style="margin-top: 10px;">Back to Search</button>
+        </div>
+    </main>
+
+    <script src="js/singleUser.js"></script>
+</body>
+</html>
