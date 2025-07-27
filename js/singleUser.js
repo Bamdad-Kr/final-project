@@ -24,13 +24,26 @@ document.addEventListener('DOMContentLoaded', () => {
         noUserDataMessage.style.display = 'none';
 
         try {
-            const response = await fetch(`https://api.github.com/users/${username}`);
+            const response = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`, {
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'User-Agent': 'GitHub-Search-App'
+                }
+            });
+            
             if (response.status === 404) {
                 throw new Error('User not found.');
             }
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (response.status === 401) {
+                throw new Error('GitHub API authentication required. Please try again later.');
             }
+            if (response.status === 403) {
+                throw new Error('Rate limit exceeded. Please try again in a few minutes.');
+            }
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
             const user = await response.json();
 
             if (!user.name && !user.bio && user.public_repos === 0 && user.followers === 0 && user.following === 0) {
@@ -59,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching user details:', error);
-            errorMessage.textContent = 'Error fetching user details.';
+            errorMessage.textContent = error.message || 'Error fetching user details.';
             errorMessage.style.display = 'block';
             loadingMessage.style.display = 'none';
             noUserDataMessage.style.display = 'block';
@@ -68,10 +81,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchUserRepos(username) {
         try {
-            const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc&per_page=5`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            const response = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&direction=desc&per_page=5`, {
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'User-Agent': 'GitHub-Search-App'
+                }
+            });
+            
+            if (response.status === 401) {
+                throw new Error('GitHub API authentication required. Please try again later.');
             }
+            if (response.status === 403) {
+                throw new Error('Rate limit exceeded. Please try again in a few minutes.');
+            }
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
             const repos = await response.json();
 
             if (repos.length === 0) {

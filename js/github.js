@@ -19,15 +19,33 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Show loading state
+        searchButton.textContent = 'Loading...';
+        searchButton.disabled = true;
         resultsDiv.innerHTML = '';
         noResultsMessage.style.display = 'none';
         errorFetchingMessage.style.display = 'none';
 
         try {
-            const response = await fetch(`https://api.github.com/search/users?q=${username}`);
+            const response = await fetch(`https://api.github.com/search/users?q=${encodeURIComponent(username)}`, {
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'User-Agent': 'GitHub-Search-App'
+                }
+            });
+            
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (response.status === 401) {
+                    throw new Error('GitHub API authentication required. Please try again later.');
+                } else if (response.status === 403) {
+                    throw new Error('Rate limit exceeded. Please try again in a few minutes.');
+                } else if (response.status === 404) {
+                    throw new Error('GitHub API endpoint not found.');
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
             }
+            
             const data = await response.json();
 
             if (data.items.length === 0) {
@@ -61,7 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching GitHub users:', error);
+            errorFetchingMessage.textContent = error.message || 'Error fetching GitHub users. Please try again.';
             errorFetchingMessage.style.display = 'block';
+        } finally {
+            // Reset button state
+            searchButton.textContent = 'Submit';
+            searchButton.disabled = false;
         }
     }
 });
